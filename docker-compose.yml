@@ -1,0 +1,16 @@
+version: "3.9"
+
+services:
+  autohaus-ai-rag-agent-backend:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      APP_ENV: development
+      APP_HOST: 0.0.0.0
+      APP_PORT: 8000
+      KNOWLEDGE_BASE_PATH: data/knowledge_base
+      AUDIT_LOG_PATH: logs/audit.jsonl
+    volumes:
+      - ./logs:/app/logs
+
