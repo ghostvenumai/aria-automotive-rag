@@ -12,6 +12,31 @@ Besonderes Merkmal: Der **GroundingVerifierAgent** prüft jede generierte Antwor
 
 ---
 
+## Screenshots
+
+### Hero & Tab-Navigation
+![ARIA Hero und Tab-Navigation](docs/screenshots/01-hero-tabs.png)
+
+### Workflow – Antwort & Quellen
+![Workflow Antwort mit RAG-Belegen](docs/screenshots/02-workflow-antwort.png)
+
+### Agenten-Trace
+![Agenten-Trace mit allen 7 Schritten](docs/screenshots/03-agenten-trace.png)
+
+### Laufzeit-Metriken & Token-Kosten
+![Laufzeit-Metriken und LLM Token-Verbrauch](docs/screenshots/04-metriken.png)
+
+### RAGAS-Evaluation
+![RAG-Evaluation mit Claude-Richter](docs/screenshots/05-evaluation.png)
+
+### Retrieval-Debug – Eingabe
+![Retrieval-Debug Tab](docs/screenshots/06-debug-eingabe.png)
+
+### Retrieval-Debug – Ergebnisse
+![Retrieval-Ergebnisse mit Scores und Modus](docs/screenshots/07-debug-ergebnisse.png)
+
+---
+
 ## Features
 
 | Feature | Beschreibung |
