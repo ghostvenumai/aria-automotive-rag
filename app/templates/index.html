@@ -3,27 +3,27 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>{{ app_name }}</title>
+    <title>ARIA – Automotive Retrieval Intelligence Assistant</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap"
-      rel="stylesheet"
-    />
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="/static/styles.css" />
   </head>
   <body>
     <div class="background-orb orb-a"></div>
     <div class="background-orb orb-b"></div>
+
     <main class="shell">
+
+      <!-- ── Hero ──────────────────────────────────────────────────────── -->
       <section class="hero panel">
         <div class="hero-copy">
           <p class="eyebrow">Automotive Retrieval Intelligence Assistant</p>
           <h1>ARIA</h1>
           <p class="lede">
-            KI-gestützter Wissensassistent für Autohäuser – mit hybridem RAG,
-            Query Rewriting, Halluzinationserkennung, DSGVO-konformer PII-Redaktion,
-            RAGAS-Evaluation und vollständigem Agent-Trace.
+            KI-gestützter Wissensassistent für Autohäuser — hybrides RAG,
+            Query Rewriting, Halluzinationserkennung, DSGVO-konform,
+            RAGAS-Evaluation und vollständiger Agent-Trace.
           </p>
         </div>
         <div class="hero-status">
@@ -33,7 +33,7 @@
           </div>
           <div class="status-tile">
             <span class="status-kicker">Agenten</span>
-            <strong>6 spezialisierte Agenten</strong>
+            <strong>7 spezialisierte Agenten</strong>
           </div>
           <div class="status-tile">
             <span class="status-kicker">Datenschutz</span>
@@ -43,223 +43,250 @@
             <span class="status-kicker">Halluzinationen</span>
             <strong>Grounding-Verifikation</strong>
           </div>
-          <div class="status-tile">
-            <span class="status-kicker">Evaluation</span>
-            <strong>RAGAS-Stil</strong>
-          </div>
         </div>
       </section>
 
-      <section class="workspace">
-        <div class="input-panel panel">
-          <div class="panel-heading">
-            <div>
-              <p class="section-kicker">Eingabe</p>
-              <h2>Anfrage simulieren</h2>
+      <!-- ── Tab-Navigation ─────────────────────────────────────────────── -->
+      <nav class="tab-bar" role="tablist">
+        <button class="tab active" data-tab="workflow" role="tab" aria-selected="true">
+          <span class="tab-icon">⚡</span> Workflow
+        </button>
+        <button class="tab" data-tab="evaluation" role="tab" aria-selected="false">
+          <span class="tab-icon">📊</span> Evaluation
+        </button>
+        <button class="tab" data-tab="debug" role="tab" aria-selected="false">
+          <span class="tab-icon">🔍</span> Retrieval-Debug
+        </button>
+      </nav>
+
+      <!-- ══════════════════════════════════════════════════════════════════
+           TAB 1 – WORKFLOW
+      ═══════════════════════════════════════════════════════════════════ -->
+      <div id="tab-workflow" class="tab-content active">
+        <div class="workspace">
+
+          <!-- Eingabe -->
+          <div class="input-panel panel">
+            <div class="panel-heading">
+              <div>
+                <p class="section-kicker">Eingabe</p>
+                <h2>Anfrage simulieren</h2>
+              </div>
+              <span class="panel-badge">Live Demo</span>
             </div>
-            <span class="panel-badge">Live Demo</span>
+
+            <label for="question">Kundenanfrage</label>
+            <textarea id="question" rows="6"
+              placeholder="Frage nach Finanzierung, Service, Inzahlungnahme, Garantie oder Fahrzeugbestand.">
+            </textarea>
+
+            <div class="demo-cases">
+              <button class="demo-case" data-case="Kannst du mir Finanzierungsoptionen fuer einen gebrauchten SUV mit niedriger Monatsrate erklaeren?">Finanzierung</button>
+              <button class="demo-case" data-case="Ich brauche morgen frueh einen Servicetermin wegen einer Bremswarnleuchte.">Service</button>
+              <button class="demo-case" data-case="Was braucht ihr fuer eine Inzahlungnahmebewertung meiner aktuellen Limousine?">Inzahlungnahme</button>
+              <button class="demo-case" data-case="Meine E-Mail ist jane.doe@example.com und meine VIN ist WBA3A5C50CF123456. Kannst du eine Inspektion vorbereiten?">PII-Redaktion</button>
+            </div>
+
+            <div class="action-row">
+              <button id="run-button" class="run-button">Workflow starten</button>
+              <p id="status-line" class="status-line">Bereit fuer die naechste Anfrage.</p>
+            </div>
           </div>
 
-          <label for="question">Kundenanfrage</label>
-          <textarea
-            id="question"
-            rows="8"
-            placeholder="Frage nach Finanzierung, Service, Inzahlungnahme, Garantie oder Fahrzeugbestand."
-          ></textarea>
+          <!-- Metriken-Zeile -->
+          <div class="results-grid">
+            <article class="panel metric-card accent-card">
+              <span class="metric-label">Intent</span>
+              <p id="intent-value" class="metric-value">–</p>
+            </article>
+            <article class="panel metric-card">
+              <span class="metric-label">Konfidenz</span>
+              <p id="confidence-value" class="metric-value">–</p>
+            </article>
+            <article class="panel metric-card">
+              <span class="metric-label">Menschl. Prüfung</span>
+              <p id="review-value" class="metric-value">–</p>
+            </article>
+            <article class="panel metric-card">
+              <span class="metric-label">Halluzinationsrisiko</span>
+              <p id="hallucination-value" class="metric-value">–</p>
+            </article>
 
-          <div class="demo-cases">
-            <button
-              class="demo-case"
-              data-case="Kannst du mir Finanzierungsoptionen fuer einen gebrauchten SUV mit niedriger Monatsrate erklaeren?"
-            >
-              Finanzierung
-            </button>
-            <button
-              class="demo-case"
-              data-case="Ich brauche morgen frueh einen Servicetermin wegen einer Bremswarnleuchte."
-            >
-              Service
-            </button>
-            <button
-              class="demo-case"
-              data-case="Was braucht ihr fuer eine Inzahlungnahmebewertung meiner aktuellen Limousine?"
-            >
-              Inzahlungnahme
-            </button>
-            <button
-              class="demo-case"
-              data-case="Meine E-Mail ist jane.doe@example.com und meine VIN ist WBA3A5C50CF123456. Kannst du eine Inspektion vorbereiten?"
-            >
-              PII-Redaktion
-            </button>
-          </div>
+            <!-- Halluzinations-Warnung (nur sichtbar wenn Risiko > 0) -->
+            <article id="hallucination-warning" class="panel card wide" style="display:none;border-left:4px solid #dc2626;">
+              <div class="card-header">
+                <h3>Halluzinationswarnung</h3>
+                <span class="card-chip" style="background:#fef2f2;color:#dc2626;border-color:#fecaca;">Nicht belegt</span>
+              </div>
+              <p style="color:var(--text-muted);font-size:.875rem;margin:0 0 .75rem;">
+                Folgende Sätze konnten nicht durch abgerufene Quellen gedeckt werden:
+              </p>
+              <div id="unsupported-claims" class="stack"></div>
+            </article>
 
-          <div class="action-row">
-            <button id="run-button" class="run-button">Workflow starten</button>
-            <p id="status-line" class="status-line">Bereit fuer die naechste Anfrage.</p>
+            <!-- Antwort -->
+            <article class="panel card wide">
+              <div class="card-header">
+                <h3>Antwort</h3>
+                <span class="card-chip">Belegte Antwort</span>
+              </div>
+              <p id="answer-value" class="body-copy">Starte einen Fall, um die Antwort zu sehen.</p>
+            </article>
+
+            <!-- Anonymisierte Eingabe -->
+            <article class="panel card wide">
+              <div class="card-header">
+                <h3>Anonymisierte Eingabe</h3>
+                <span class="card-chip">Datenschutz-Ebene</span>
+              </div>
+              <p id="redacted-value" class="body-copy muted">Noch kein redigierter Input vorhanden.</p>
+            </article>
+
+            <!-- Quellen -->
+            <article class="panel card wide">
+              <div class="card-header">
+                <h3>Quellen</h3>
+                <span class="card-chip">RAG-Belege</span>
+              </div>
+              <div id="sources-value" class="stack muted">Noch keine Quellen geladen.</div>
+            </article>
+
+            <!-- Agent Trace -->
+            <article class="panel card wide">
+              <div class="card-header">
+                <h3>Agenten-Trace</h3>
+                <span class="card-chip">Entscheidungspfad</span>
+              </div>
+              <div id="trace-value" class="stack muted">Noch kein Trace vorhanden.</div>
+            </article>
+
+            <!-- Metriken -->
+            <article class="panel card wide">
+              <div class="card-header">
+                <h3>Laufzeit-Metriken</h3>
+                <span class="card-chip">Runtime Signals</span>
+              </div>
+              <div id="metrics-value" class="stack muted">Noch keine Metriken vorhanden.</div>
+            </article>
           </div>
         </div>
+      </div>
 
-        <div class="results-grid">
-          <article class="panel metric-card accent-card">
-            <span class="metric-label">Intent</span>
-            <p id="intent-value" class="metric-value">-</p>
-          </article>
-          <article class="panel metric-card">
-            <span class="metric-label">Konfidenz</span>
-            <p id="confidence-value" class="metric-value">-</p>
-          </article>
-          <article class="panel metric-card">
-            <span class="metric-label">Menschl. Pruefung</span>
-            <p id="review-value" class="metric-value">-</p>
-          </article>
-          <article class="panel metric-card">
-            <span class="metric-label">Halluzinationsrisiko</span>
-            <p id="hallucination-value" class="metric-value">-</p>
-          </article>
-
-          <article id="hallucination-warning" class="panel card wide" style="display:none;border-left:4px solid #ef4444;">
-            <div class="card-header">
-              <h3>Halluzinationswarnung</h3>
-              <span class="card-chip" style="background:#fef2f2;color:#ef4444;">Nicht belegt</span>
+      <!-- ══════════════════════════════════════════════════════════════════
+           TAB 2 – EVALUATION
+      ═══════════════════════════════════════════════════════════════════ -->
+      <div id="tab-evaluation" class="tab-content">
+        <div class="workspace">
+          <div class="input-panel panel">
+            <div class="panel-heading">
+              <div>
+                <p class="section-kicker">Qualitätssicherung</p>
+                <h2>RAG-Evaluation (RAGAS-Stil)</h2>
+              </div>
+              <span class="panel-badge">Claude-Richter</span>
             </div>
-            <p style="color:var(--text-muted);font-size:.875rem;margin-bottom:.75rem;">
-              Folgende Sätze konnten nicht durch abgerufene Quellen gedeckt werden:
+            <p style="color:var(--text-muted);font-size:.9rem;margin-bottom:1.5rem;line-height:1.7;">
+              Bewertet eine Antwort nach <strong>Faithfulness</strong> (sind alle Aussagen durch den Kontext belegt?)
+              und <strong>Relevanz</strong> (beantwortet die Antwort die Frage?). Nach einem Workflow-Durchlauf
+              werden die Felder automatisch vorausgefüllt.
             </p>
-            <div id="unsupported-claims" class="stack"></div>
-          </article>
 
-          <article class="panel card wide">
-            <div class="card-header">
-              <h3>Antwort</h3>
-              <span class="card-chip">Belegte Antwort</span>
+            <label for="eval-question">Frage</label>
+            <textarea id="eval-question" rows="3" placeholder="Die Frage, die an den Workflow gestellt wurde."></textarea>
+
+            <label for="eval-answer" style="margin-top:1.25rem;">Antwort (zu bewerten)</label>
+            <textarea id="eval-answer" rows="5" placeholder="Die generierte Antwort, die bewertet werden soll."></textarea>
+
+            <label for="eval-context" style="margin-top:1.25rem;">Kontext (abgerufene Quellen, eine pro Zeile)</label>
+            <textarea id="eval-context" rows="4" placeholder="Jede abgerufene Quelltextzeile in einer eigenen Zeile."></textarea>
+
+            <div class="action-row" style="margin-top:1.5rem;">
+              <button id="eval-button" class="run-button" style="background:linear-gradient(135deg,#7c3aed,#6d28d9);">Jetzt evaluieren</button>
+              <p id="eval-status" class="status-line">Bereit zur Evaluierung.</p>
             </div>
-            <p id="answer-value" class="body-copy">
-              Starte einen Fall, um die Antwort des Agent-Workflows zu sehen.
+          </div>
+
+          <div class="results-grid">
+            <article class="panel metric-card accent-card">
+              <span class="metric-label">Faithfulness</span>
+              <p id="eval-faithfulness" class="metric-value">–</p>
+            </article>
+            <article class="panel metric-card">
+              <span class="metric-label">Relevanz</span>
+              <p id="eval-relevancy" class="metric-value">–</p>
+            </article>
+            <article class="panel metric-card">
+              <span class="metric-label">Gesamt-Score</span>
+              <p id="eval-overall" class="metric-value">–</p>
+            </article>
+            <article class="panel card wide">
+              <div class="card-header">
+                <h3>Begründung des Richters</h3>
+                <span class="card-chip">KI-Richter</span>
+              </div>
+              <p id="eval-explanation" class="body-copy muted">Noch keine Evaluation durchgeführt.</p>
+            </article>
+          </div>
+        </div>
+      </div>
+
+      <!-- ══════════════════════════════════════════════════════════════════
+           TAB 3 – RETRIEVAL-DEBUG
+      ═══════════════════════════════════════════════════════════════════ -->
+      <div id="tab-debug" class="tab-content">
+        <div class="workspace">
+          <div class="input-panel panel">
+            <div class="panel-heading">
+              <div>
+                <p class="section-kicker">Diagnose</p>
+                <h2>Retrieval-Debug</h2>
+              </div>
+              <span class="panel-badge">Entwickler</span>
+            </div>
+            <p style="color:var(--text-muted);font-size:.9rem;margin-bottom:1.5rem;line-height:1.7;">
+              Zeigt Rang, Score und Retrieval-Modus (hybrid_rrf / dense / lexical) für jeden gefundenen
+              Chunk — nützlich zur Score-Kalibrierung und Fehleranalyse.
             </p>
-          </article>
 
-          <article class="panel card wide">
-            <div class="card-header">
-              <h3>Anonymisierte Eingabe</h3>
-              <span class="card-chip">Datenschutz-Ebene</span>
-            </div>
-            <p id="redacted-value" class="body-copy">Noch kein redigierter Input vorhanden.</p>
-          </article>
+            <label for="debug-query">Suchanfrage</label>
+            <input id="debug-query" type="text"
+              placeholder="z.B. Öffnungszeiten Werkstatt"
+              class="text-input" />
 
-          <article class="panel card wide">
-            <div class="card-header">
-              <h3>Quellen</h3>
-              <span class="card-chip">RAG-Belege</span>
+            <div class="action-row" style="margin-top:1.5rem;">
+              <button id="debug-button" class="run-button" style="background:linear-gradient(135deg,#0f766e,#0d9488);">Retrieval prüfen</button>
+              <p id="debug-status" class="status-line">Bereit.</p>
             </div>
-            <div id="sources-value" class="stack muted">Noch keine Quellen geladen.</div>
-          </article>
-
-          <article class="panel card wide">
-            <div class="card-header">
-              <h3>Agenten-Trace</h3>
-              <span class="card-chip">Entscheidungspfad</span>
-            </div>
-            <div id="trace-value" class="stack muted">Noch kein Trace vorhanden.</div>
-          </article>
-
-          <article class="panel card wide">
-            <div class="card-header">
-              <h3>Metriken</h3>
-              <span class="card-chip">Laufzeitsignale</span>
-            </div>
-            <div id="metrics-value" class="stack muted">Noch keine Metriken vorhanden.</div>
-          </article>
-        </div>
-      </section>
-
-      <!-- ── RAG-Evaluierung ───────────────────────────────────────────── -->
-      <section class="workspace" style="margin-top: 2rem;">
-        <div class="input-panel panel">
-          <div class="panel-heading">
-            <div>
-              <p class="section-kicker">Qualitaetssicherung</p>
-              <h2>RAG-Evaluierung (RAGAS-Stil)</h2>
-            </div>
-            <span class="panel-badge">Neu</span>
           </div>
-          <p style="color:var(--text-muted);font-size:.875rem;margin-bottom:1.25rem;">
-            Bewertet eine Antwort nach <strong>Faithfulness</strong> (sind alle Aussagen belegt?)
-            und <strong>Relevanz</strong> (beantwortet die Antwort die Frage?) – mittels Claude-Richter.
-          </p>
 
-          <label for="eval-question">Frage</label>
-          <textarea id="eval-question" rows="3" placeholder="Dieselbe Frage, die an den Workflow gestellt wurde."></textarea>
-
-          <label for="eval-answer" style="margin-top:1rem;">Antwort (zu bewerten)</label>
-          <textarea id="eval-answer" rows="5" placeholder="Die generierte Antwort, die bewertet werden soll."></textarea>
-
-          <label for="eval-context" style="margin-top:1rem;">Kontext (abgerufene Quellen, eine pro Zeile)</label>
-          <textarea id="eval-context" rows="4" placeholder="Jede abgerufene Quelltextzeile in einer eigenen Zeile."></textarea>
-
-          <div class="action-row" style="margin-top:1.25rem;">
-            <button id="eval-button" class="run-button" style="background:var(--accent-2,#7c3aed);">Jetzt evaluieren</button>
-            <p id="eval-status" class="status-line">Bereit zur Evaluierung.</p>
+          <div class="results-grid">
+            <article class="panel metric-card">
+              <span class="metric-label">Ergebnisse</span>
+              <p id="debug-count" class="metric-value">–</p>
+            </article>
+            <article class="panel metric-card">
+              <span class="metric-label">Embedding-Modus</span>
+              <p id="debug-mode" class="metric-value">–</p>
+            </article>
+            <article class="panel metric-card">
+              <span class="metric-label">Indizierte Chunks</span>
+              <p id="debug-chunks" class="metric-value">–</p>
+            </article>
+            <article class="panel metric-card">
+              <span class="metric-label">Latenz</span>
+              <p id="debug-latency" class="metric-value">–</p>
+            </article>
+            <article class="panel card wide">
+              <div class="card-header">
+                <h3>Retrieval-Ergebnisse</h3>
+                <span class="card-chip">Scores & Ränge</span>
+              </div>
+              <div id="debug-results" class="stack muted">Noch keine Debug-Ergebnisse.</div>
+            </article>
           </div>
         </div>
+      </div>
 
-        <div class="results-grid">
-          <article class="panel metric-card accent-card">
-            <span class="metric-label">Faithfulness</span>
-            <p id="eval-faithfulness" class="metric-value">-</p>
-          </article>
-          <article class="panel metric-card">
-            <span class="metric-label">Relevanz</span>
-            <p id="eval-relevancy" class="metric-value">-</p>
-          </article>
-          <article class="panel metric-card">
-            <span class="metric-label">Gesamt</span>
-            <p id="eval-overall" class="metric-value">-</p>
-          </article>
-          <article class="panel card wide">
-            <div class="card-header">
-              <h3>Begründung</h3>
-              <span class="card-chip">KI-Richter</span>
-            </div>
-            <p id="eval-explanation" class="body-copy">Noch keine Evaluation durchgeführt.</p>
-          </article>
-        </div>
-      </section>
-
-      <!-- ── Retrieval-Diagnose ─────────────────────────────────────────── -->
-      <section class="workspace" style="margin-top: 2rem;">
-        <div class="input-panel panel">
-          <div class="panel-heading">
-            <div>
-              <p class="section-kicker">Diagnose</p>
-              <h2>Retrieval-Debug</h2>
-            </div>
-            <span class="panel-badge">Entwickler</span>
-          </div>
-          <p style="color:var(--text-muted);font-size:.875rem;margin-bottom:1.25rem;">
-            Zeigt Rang, Score und Retrieval-Modus (hybrid_rrf / dense / lexical) fuer jeden
-            gefundenen Chunk – nützlich zur Kalibrierung und Fehleranalyse.
-          </p>
-
-          <label for="debug-query">Suchanfrage</label>
-          <input id="debug-query" type="text" placeholder="z.B. Öffnungszeiten Werkstatt" style="width:100%;padding:.75rem 1rem;border:1px solid var(--border);border-radius:.75rem;background:var(--surface-raised);color:var(--text-primary);font-family:inherit;font-size:.9375rem;" />
-
-          <div class="action-row" style="margin-top:1.25rem;">
-            <button id="debug-button" class="run-button" style="background:var(--text-muted,#6b7280);">Retrieval prüfen</button>
-            <p id="debug-status" class="status-line">Bereit.</p>
-          </div>
-        </div>
-
-        <div class="results-grid">
-          <article class="panel card wide">
-            <div class="card-header">
-              <h3>Retrieval-Ergebnisse</h3>
-              <span class="card-chip" id="debug-mode-chip">-</span>
-            </div>
-            <div id="debug-results" class="stack muted">Noch keine Debug-Ergebnisse.</div>
-          </article>
-        </div>
-      </section>
     </main>
 
     <script src="/static/app.js"></script>

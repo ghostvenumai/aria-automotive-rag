@@ -41,6 +41,7 @@ async def lifespan(app: FastAPI):
     )
 
     llm: ClaudeInferenceClient | None = None
+    fast_llm: ClaudeInferenceClient | None = None
     if settings.anthropic_api_key:
         try:
             llm = ClaudeInferenceClient(
@@ -48,7 +49,16 @@ async def lifespan(app: FastAPI):
                 model=settings.llm_model,
                 max_tokens=settings.llm_max_tokens,
             )
-            logger.info("Claude LLM client initialised", extra={"model": settings.llm_model})
+            # Haiku for fast, low-token tasks (query rewriting, eval)
+            fast_llm = ClaudeInferenceClient(
+                api_key=settings.anthropic_api_key,
+                model=settings.llm_rewriter_model,
+                max_tokens=80,
+            )
+            logger.info(
+                "Claude LLM clients initialised",
+                extra={"synthesis": settings.llm_model, "rewriter": settings.llm_rewriter_model},
+            )
         except RuntimeError as exc:
             logger.warning("Claude client could not be initialised: %s — falling back to template responses", exc)
 
@@ -57,6 +67,7 @@ async def lifespan(app: FastAPI):
         knowledge_base=knowledge_base,
         audit_logger=audit_logger,
         llm=llm,
+        fast_llm=fast_llm,
     )
 
     app.state.settings = settings

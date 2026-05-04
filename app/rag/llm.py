@@ -76,12 +76,13 @@ class ClaudeInferenceClient:
         *,
         messages: list[dict[str, Any]],
         system: str = DEALERSHIP_SYSTEM_PROMPT,
+        max_tokens: int | None = None,
     ) -> LLMResponse:
         import anthropic
 
         response = await self._client.messages.create(
             model=self._model,
-            max_tokens=self._max_tokens,
+            max_tokens=max_tokens or self._max_tokens,
             system=[{"type": "text", "text": system, "cache_control": {"type": "ephemeral"}}],
             messages=messages,
             extra_headers={"anthropic-beta": "prompt-caching-2024-07-31"},

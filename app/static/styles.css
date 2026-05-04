@@ -399,6 +399,70 @@ textarea::placeholder { color: var(--muted-2); }
   word-break: break-word;
 }
 
+/* ── Tabs ────────────────────────────────────────────────────────────────── */
+
+.tab-bar {
+  display: flex;
+  gap: 4px;
+  background: var(--surface);
+  padding: 6px;
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--panel-border);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: 24px;
+}
+
+.tab {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 11px 20px;
+  border: 0;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--text-muted);
+  font: 600 0.9rem var(--sans);
+  cursor: pointer;
+  transition: all 160ms ease;
+  white-space: nowrap;
+}
+
+.tab:hover { background: var(--surface-raised); color: var(--text-primary); }
+
+.tab.active {
+  background: var(--surface-raised);
+  color: var(--text-primary);
+  box-shadow: var(--shadow-sm);
+}
+
+.tab-icon { font-size: 1rem; }
+
+.tab-content { display: none; }
+.tab-content.active { display: block; animation: rise-in 240ms ease both; }
+
+/* ── Text input (used in debug tab) ─────────────────────────────────────── */
+
+.text-input {
+  width: 100%;
+  padding: 14px 18px;
+  border: 1.5px solid var(--border);
+  border-radius: 14px;
+  background: var(--surface);
+  color: var(--text-primary);
+  font: 400 1rem var(--sans);
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.text-input:focus {
+  outline: none;
+  border-color: var(--accent-strong);
+  box-shadow: 0 0 0 4px rgba(3, 105, 161, 0.10);
+}
+
+.text-input::placeholder { color: var(--muted-2); }
+
 /* ── Animations ──────────────────────────────────────────────────────────── */
 
 @keyframes rise-in {

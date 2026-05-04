@@ -27,6 +27,7 @@ class Settings(BaseSettings):
     anthropic_api_key: str | None = None
     llm_model: str = "claude-opus-4-7"
     llm_max_tokens: int = Field(default=1024, ge=256, le=4096)
+    llm_rewriter_model: str = "claude-haiku-4-5-20251001"
     hybrid_search_enabled: bool = True
     session_history_turns: int = Field(default=3, ge=0, le=10)
 

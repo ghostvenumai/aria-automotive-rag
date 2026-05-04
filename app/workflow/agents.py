@@ -101,7 +101,8 @@ class QueryRewriterAgent:
 
         messages = [{"role": "user", "content": f"Kundenanfrage: {state.raw_input}"}]
         try:
-            response = await llm.complete(messages=messages, system=QUERY_REWRITER_SYSTEM)
+            # max_tokens=80: rewriter only needs a short keyword phrase, not a full answer
+            response = await llm.complete(messages=messages, system=QUERY_REWRITER_SYSTEM, max_tokens=80)
             rewritten = response.text.strip()
             state.rewritten_query = rewritten if rewritten else state.raw_input
         except Exception as exc:

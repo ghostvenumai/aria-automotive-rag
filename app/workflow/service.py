@@ -44,10 +44,13 @@ class WorkflowService:
         knowledge_base: KnowledgeBaseService,
         audit_logger: AuditLogger,
         llm: ClaudeInferenceClient | None = None,
+        fast_llm: ClaudeInferenceClient | None = None,
     ) -> None:
         self.knowledge_base = knowledge_base
         self.audit_logger = audit_logger
         self.llm = llm
+        # fast_llm (Haiku) is used for query rewriting — low-token, latency-sensitive
+        self.fast_llm = fast_llm or llm
         self.intent_agent = IntentClassifierAgent()
         self.privacy_agent = PrivacyGuardAgent()
         self.query_rewriter_agent = QueryRewriterAgent()
@@ -80,7 +83,7 @@ class WorkflowService:
         state.intent = str(intent_trace["decision"])
         state.trace.append(intent_trace)
 
-        state.trace.append(await self.query_rewriter_agent.rewrite(state, self.llm))
+        state.trace.append(await self.query_rewriter_agent.rewrite(state, self.fast_llm))
         state.trace.append(await self.retriever_agent.retrieve(state, self.knowledge_base))
 
         quality_trace = self.quality_agent.evaluate(state)
@@ -158,7 +161,7 @@ class WorkflowService:
         intent_trace = self.intent_agent.classify(state)
         state.intent = str(intent_trace["decision"])
         state.trace.append(intent_trace)
-        state.trace.append(await self.query_rewriter_agent.rewrite(state, self.llm))
+        state.trace.append(await self.query_rewriter_agent.rewrite(state, self.fast_llm))
         state.trace.append(await self.retriever_agent.retrieve(state, self.knowledge_base))
         state.trace.append(self.quality_agent.evaluate(state))
 
