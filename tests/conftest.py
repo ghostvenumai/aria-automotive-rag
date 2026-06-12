@@ -22,7 +22,7 @@ def configured_paths(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> dict[st
     )
     audit_log_file = tmp_path / "audit.jsonl"
 
-    monkeypatch.setenv("KNOWLEDGE_BASE_DIR", str(knowledge_base_dir))
+    monkeypatch.setenv("KNOWLEDGE_BASE_PATH", str(knowledge_base_dir))
     monkeypatch.setenv("AUDIT_LOG_PATH", str(audit_log_file))
 
     return {
