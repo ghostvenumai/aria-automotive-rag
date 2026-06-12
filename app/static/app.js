@@ -67,11 +67,11 @@ const renderStack = (container, items, emptyText, renderer) => {
 };
 
 const intentLabel = (intent) => ({
-  vehicle_inventory: "Fahrzeugbestand",
-  financing:         "Finanzierung",
-  service_booking:   "Service",
-  trade_in:          "Inzahlungnahme",
-  warranty:          "Garantie",
+  leave_absence:          "Urlaub & Abwesenheit",
+  payroll_compensation:   "Gehalt & Spesen",
+  onboarding_offboarding: "On-/Offboarding",
+  working_time:           "Arbeitszeit",
+  benefits:               "Benefits",
   general:           "Allgemein",
   privacy_request:   "Datenschutz",
 })[intent] ?? intent;
@@ -284,3 +284,4 @@ debugButton.addEventListener("click", async () => {
 debugQuery.addEventListener("keydown", (e) => {
   if (e.key === "Enter") debugButton.click();
 });
+

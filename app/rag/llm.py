@@ -15,27 +15,28 @@ class LLMResponse:
     stop_reason: str
 
 
-DEALERSHIP_SYSTEM_PROMPT = """\
-Du bist ein erfahrener KI-Assistent für Kraftfahrzeughändler mit fundiertem Fachwissen
-zu Fahrzeugbestand, Finanzierungs- und Leasingoptionen, Werkstattleistungen,
-Inzahlungnahme-Bewertungen und Garantieabdeckungen.
+HR_SYSTEM_PROMPT = """\
+Du bist KLARA, ein erfahrener KI-Wissensassistent für HR- und People-Operations-Teams
+mit fundiertem Fachwissen zu Urlaubs- und Abwesenheitsregelungen, Gehalt und Spesen,
+Arbeitszeitmodellen, Onboarding/Offboarding und betrieblichen Zusatzleistungen.
 
 REGELN:
 - Antworte AUSSCHLIESSLICH auf Basis des bereitgestellten Kontexts. Erfinde keine Details.
 - Wenn der Kontext nicht ausreicht, sage das ausdrücklich und empfehle die Weiterleitung
-  an einen menschlichen Berater.
+  an das HR-Team.
 - Sei präzise und professionell. Verwende klare, verständliche Sprache ohne unnötigen Fachjargon.
-- Spekuliere niemals über Preise, Verfügbarkeit oder rechtliche Bedingungen, die nicht im
-  Kontext erwähnt sind.
-- Bei datenschutz- oder rechtsrelevanten Fragen (DSGVO, Vertragsstreitigkeiten) immer an
-  einen menschlichen Mitarbeiter eskalieren.
+- Spekuliere niemals über Gehälter, Fristen oder rechtliche Bedingungen, die nicht im
+  Kontext erwähnt sind. Du gibst keine Rechtsberatung.
+- Bei datenschutz- oder arbeitsrechtlich heiklen Fragen (DSGVO-Auskunftsersuchen,
+  Kündigungen, Konflikte) immer an einen menschlichen HR-Mitarbeiter eskalieren.
 - Antworte immer auf Deutsch, unabhängig von der Sprache der Anfrage.
 """
 
 QUERY_REWRITER_SYSTEM = """\
-Du bist ein Experte für semantische Suchanfragen in Kraftfahrzeughändler-Datenbanken.
-Formuliere die Kundenanfrage so um, dass sie für die Vektordatenbanksuche optimal geeignet ist:
-Extrahiere Kernbegriffe, löse Abkürzungen auf, ergänze fachliche Synonyme.
+Du bist ein Experte für semantische Suchanfragen in HR-Wissensdatenbanken.
+Formuliere die Mitarbeiteranfrage so um, dass sie für die Vektordatenbanksuche optimal
+geeignet ist: Extrahiere Kernbegriffe, löse Abkürzungen auf (z.B. bAV, AU, EZ),
+ergänze fachliche Synonyme.
 
 Antworte NUR mit der umformulierten Suchanfrage – keine Erklärung, kein Kommentar.
 """
@@ -75,7 +76,7 @@ class ClaudeInferenceClient:
         self,
         *,
         messages: list[dict[str, Any]],
-        system: str = DEALERSHIP_SYSTEM_PROMPT,
+        system: str = HR_SYSTEM_PROMPT,
         max_tokens: int | None = None,
     ) -> LLMResponse:
         import anthropic
@@ -85,7 +86,6 @@ class ClaudeInferenceClient:
             max_tokens=max_tokens or self._max_tokens,
             system=[{"type": "text", "text": system, "cache_control": {"type": "ephemeral"}}],
             messages=messages,
-            extra_headers={"anthropic-beta": "prompt-caching-2024-07-31"},
         )
         return LLMResponse(
             text=response.content[0].text if response.content else "",
@@ -99,14 +99,13 @@ class ClaudeInferenceClient:
         self,
         *,
         messages: list[dict[str, Any]],
-        system: str = DEALERSHIP_SYSTEM_PROMPT,
+        system: str = HR_SYSTEM_PROMPT,
     ) -> AsyncIterator[str]:
         async with self._client.messages.stream(
             model=self._model,
             max_tokens=self._max_tokens,
             system=[{"type": "text", "text": system, "cache_control": {"type": "ephemeral"}}],
             messages=messages,
-            extra_headers={"anthropic-beta": "prompt-caching-2024-07-31"},
         ) as stream:
             async for text in stream.text_stream:
                 yield text

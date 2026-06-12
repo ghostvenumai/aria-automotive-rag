@@ -1,39 +1,46 @@
-# ARIA – Automotive Retrieval Intelligence Assistant
+<div align="center">
 
-> **KI-gestützter RAG-Wissensassistent für Autohäuser** — produktionsreifer Python-Backend-Stack mit hybridem Retrieval, Halluzinationserkennung, DSGVO-konformer PII-Redaktion und eingebautem Evaluierungssystem.
+# KLARA
+
+**Knowledge Lookup And Retrieval Assistant**
+
+KI-gestützter RAG-Wissensassistent für HR- und People-Operations-Teams —
+produktionsreifer Python-Backend-Stack mit hybridem Retrieval, Halluzinationserkennung,
+DSGVO-konformer PII-Redaktion und eingebautem Evaluierungssystem.
+
+[![Python](https://img.shields.io/badge/Python-3.11+-3776ab?style=flat-square&logo=python&logoColor=white)](https://python.org)
+[![FastAPI](https://img.shields.io/badge/FastAPI-async-009688?style=flat-square&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
+[![Claude](https://img.shields.io/badge/Claude_API-Opus_+_Haiku-a855f7?style=flat-square&logo=anthropic&logoColor=white)](https://anthropic.com)
+[![CI](https://github.com/ghostvenumai/klara-hr-rag/actions/workflows/ci.yml/badge.svg)](https://github.com/ghostvenumai/klara-hr-rag/actions/workflows/ci.yml)
+[![DSGVO](https://img.shields.io/badge/DSGVO-PII--Redaktion-3b82f6?style=flat-square)](#datenschutz--dsgvo)
+
+</div>
 
 ---
 
 ## Überblick
 
-ARIA beantwortet Kundenfragen zu Fahrzeugbestand, Finanzierung, Service, Inzahlungnahme und Garantie — ausschließlich auf Basis einer gepflegten Wissensdatenbank. Jede Anfrage durchläuft eine mehrstufige Agent-Pipeline, die transparent im Audit-Log nachvollzogen werden kann.
+KLARA beantwortet Mitarbeiterfragen zu Urlaub, Gehalt & Spesen, Arbeitszeit, Onboarding
+und Benefits — **ausschließlich auf Basis einer gepflegten Wissensdatenbank**. Jede Anfrage
+durchläuft eine mehrstufige Agent-Pipeline, die transparent im Audit-Log nachvollziehbar ist.
 
-Besonderes Merkmal: Der **GroundingVerifierAgent** prüft jede generierte Antwort Satz für Satz gegen die abgerufenen Quellen und meldet ungedeckte Behauptungen als Halluzinationsrisiko — kein zusätzlicher LLM-Call, keine Latenzkosten.
+Besonderes Merkmal: Der **GroundingVerifierAgent** prüft jede generierte Antwort Satz für
+Satz gegen die abgerufenen Quellen und meldet ungedeckte Behauptungen als
+Halluzinationsrisiko — ohne zusätzlichen LLM-Call, ohne Latenzkosten.
+
+> Mitarbeiterdaten sind die sensibelsten Daten im Unternehmen. KLARA redigiert
+> personenbezogene Daten (E-Mail, Telefon, IBAN, Sozialversicherungsnummer) **bevor**
+> irgendetwas geloggt wird.
 
 ---
 
 ## Screenshots
 
-### Hero & Tab-Navigation
-![ARIA Hero und Tab-Navigation](docs/screenshots/01-hero-tabs.png)
+### Übersicht
+![KLARA Oberfläche](docs/screenshots/01-klara-ui.png)
 
-### Workflow – Antwort & Quellen
-![Workflow Antwort mit RAG-Belegen](docs/screenshots/02-workflow-antwort.png)
-
-### Agenten-Trace
-![Agenten-Trace mit allen 7 Schritten](docs/screenshots/03-agenten-trace.png)
-
-### Laufzeit-Metriken & Token-Kosten
-![Laufzeit-Metriken und LLM Token-Verbrauch](docs/screenshots/04-metriken.png)
-
-### RAGAS-Evaluation
-![RAG-Evaluation mit Claude-Richter](docs/screenshots/05-evaluation.png)
-
-### Retrieval-Debug – Eingabe
-![Retrieval-Debug Tab](docs/screenshots/06-debug-eingabe.png)
-
-### Retrieval-Debug – Ergebnisse
-![Retrieval-Ergebnisse mit Scores und Modus](docs/screenshots/07-debug-ergebnisse.png)
+### Workflow mit Antwort, Konfidenz und Grounding-Verifikation
+![Workflow-Antwort mit Halluzinationsprüfung](docs/screenshots/02-workflow-antwort.png)
 
 ---
 
@@ -42,57 +49,49 @@ Besonderes Merkmal: Der **GroundingVerifierAgent** prüft jede generierte Antwor
 | Feature | Beschreibung |
 |---|---|
 | **Hybrid RRF Retrieval** | Lexikalische und Dense-Suche, fusioniert via Reciprocal Rank Fusion |
-| **Query Rewriting** | Claude reformuliert Kundenanfragen für optimale Vektordatenbanksuche |
+| **Query Rewriting** | Claude reformuliert Mitarbeiteranfragen für optimale Vektordatenbanksuche (löst HR-Kürzel wie bAV, AU, EZ auf) |
 | **Contextual Retrieval** | Anthropic-Technik: Claude bereichert jeden Chunk mit Dokumentkontext vor dem Embedding |
 | **Halluzinationserkennung** | Token-Overlap-Check je Satz — ohne Extra-LLM-Call |
-| **PII-Redaktion** | E-Mail, IBAN, VIN, KFZ-Kennzeichen u.v.m. werden vor dem Audit-Logging anonymisiert |
+| **PII-Redaktion** | E-Mail, Telefon, IBAN, Kreditkarte, Sozialversicherungsnummer werden vor dem Audit-Logging anonymisiert |
+| **Intent-Klassifikation** | 6 HR-Intents (Urlaub, Gehalt, Arbeitszeit, On-/Offboarding, Benefits, DSGVO) steuern Eskalation und Antwortverhalten |
 | **RAGAS-Evaluation** | Claude-Richter bewertet Faithfulness + Relevanz jeder Antwort |
 | **SSE Streaming** | Token-by-Token Antwort via Server-Sent Events |
 | **Multi-Turn History** | Gesprächsverlauf wird pro Request mitgeführt (max. 10 Turns) |
-| **Agent Trace** | Jeder Schritt der Pipeline ist mit Latenz, Entscheidung und Begründung protokolliert |
+| **Agent Trace** | Jeder Pipeline-Schritt mit Latenz, Entscheidung und Begründung protokolliert |
 | **Audit-Logging** | DSGVO-konformes JSONL-Log aller Anfragen (nur redigierte Eingaben) |
-| **Retrieval-Debug** | Diagnose-Endpunkt zeigt Rang, Score und Retrieval-Modus pro Chunk |
+| **Offline-Fallback** | Ohne API-Keys: lokales Retrieval + Template-Antworten — voll testbar ohne Kosten |
 
 ---
 
-## Agent-Pipeline
+## Architektur
 
 ```
-Kundenanfrage
-      │
-      ▼
-┌─────────────────────────┐
-│  PrivacyGuardAgent      │  PII erkennen & anonymisieren
-└──────────┬──────────────┘
-           ▼
-┌──────────────────────────┐
-│  IntentClassifierAgent   │  Domänen-Intent erkennen (Finanzierung / Service / …)
-└──────────┬───────────────┘
-           ▼
-┌──────────────────────────┐
-│  QueryRewriterAgent      │  Anfrage für Vektor-Retrieval optimieren (Claude)
-└──────────┬───────────────┘
-           ▼
-┌──────────────────────────┐
-│  RetrieverAgent          │  Hybrid RRF: Lexikal + Dense → Fusionierte Rangliste
-└──────────┬───────────────┘
-           ▼
-┌──────────────────────────┐
-│  QualityGuardAgent       │  Konfidenz berechnen, Eskalationsentscheidung
-└──────────┬───────────────┘
-           ▼
-┌──────────────────────────┐
-│  ResponseComposerAgent   │  Antwort mit Claude synthetisieren (+ Template-Fallback)
-└──────────┬───────────────┘
-           ▼
-┌──────────────────────────┐
-│  GroundingVerifierAgent  │  Halluzinationsrisiko messen (offline, kein LLM-Call)
-└──────────┬───────────────┘
-           ▼
-┌──────────────────────────┐
-│  MetricsAgent            │  Latenz, Token-Kosten, Fallback-Rate erfassen
-└──────────────────────────┘
+POST /api/v1/ask
+        │
+        ▼
+┌──────────────────────┐
+│ IntentClassifier     │  6 HR-Intents, Keyword-basiert (kein LLM-Call)
+├──────────────────────┤
+│ PrivacyGuard         │  PII-Redaktion VOR jedem Logging (DSGVO)
+├──────────────────────┤
+│ QueryRewriter        │  Claude Haiku: Anfrage → optimale Suchquery
+├──────────────────────┤
+│ Retriever            │  Hybrid: lexikalisch + dense, RRF-Fusion, Top-K
+├──────────────────────┤
+│ ResponseComposer     │  Claude Opus: Antwort NUR aus abgerufenem Kontext
+├──────────────────────┤
+│ GroundingVerifier    │  Satz-für-Satz-Prüfung gegen Quellen (offline)
+├──────────────────────┤
+│ QualityGuard         │  Konfidenz-Score + Eskalation an Mensch (HITL)
+├──────────────────────┤
+│ Metrics              │  Latenz, Token-Kosten, Quellenzahl
+└──────────────────────┘
+        │
+        ▼
+  Antwort + Quellen + Trace + Audit-Log (redigiert)
 ```
+
+Details: [docs/architecture.md](docs/architecture.md)
 
 ---
 
@@ -100,59 +99,33 @@ Kundenanfrage
 
 | Methode | Pfad | Beschreibung |
 |---|---|---|
-| `POST` | `/api/v1/ask` | Frage stellen — vollständige Agenten-Pipeline |
-| `POST` | `/api/v1/ask/stream` | Antwort als SSE-Stream (Token-by-Token) |
-| `POST` | `/api/v1/ingest` | Dokumente in die Wissensdatenbank laden |
-| `POST` | `/api/v1/eval/run` | RAG-Antwort evaluieren (Faithfulness + Relevanz) |
-| `GET`  | `/api/v1/debug/retrieval?q=…` | Retrieval-Diagnose mit Scores und Modus |
-| `GET`  | `/api/v1/metrics` | Laufzeitmetriken (Latenz, Token-Kosten, Intent-Verteilung) |
-| `GET`  | `/api/v1/audit-logs` | Letzte Audit-Log-Einträge (redigierte Eingaben) |
-| `GET`  | `/api/v1/health` | Systemstatus und Indexgröße |
+| `POST` | `/api/v1/ask` | Frage stellen — Antwort mit Quellen, Trace, Konfidenz |
+| `POST` | `/api/v1/ask/stream` | Antwort als SSE-Stream (token-by-token) |
+| `POST` | `/api/v1/ingest` | Dokumente zur Laufzeit in die Wissensdatenbank aufnehmen |
+| `POST` | `/api/v1/eval/run` | RAGAS-Evaluation: Faithfulness + Relevanz per Claude-Richter |
+| `GET`  | `/api/v1/debug/retrieval` | Retrieval-Diagnose: Rang, Score, Modus pro Chunk |
+| `GET`  | `/api/v1/metrics` | Request-Zähler, Latenzen, Intent-Verteilung |
+| `GET`  | `/api/v1/audit-logs` | DSGVO-konformes Audit-Log (nur redigierte Eingaben) |
+| `GET`  | `/api/v1/health` | Health-Check inkl. Index-Status |
 
-### Beispiel: Frage stellen
+### Beispiel
 
 ```bash
-curl -X POST http://localhost:8100/api/v1/ask \
+curl -X POST http://localhost:8000/api/v1/ask \
   -H "Content-Type: application/json" \
-  -d '{
-    "question": "Welche Finanzierungsoptionen gibt es für Gebrauchtwagen?",
-    "session_id": "demo-001"
-  }'
+  -d '{"question": "Wie viele Urlaubstage habe ich und was passiert mit Resturlaub?"}'
 ```
 
-**Antwort (gekürzt):**
 ```json
 {
-  "intent": "financing",
-  "answer": "Für Gebrauchtwagen bieten wir Finanzierungen ab 5.000 € ...",
-  "confidence": 0.83,
-  "hallucination_risk": 0.0,
-  "unsupported_claims": [],
+  "intent": "leave_absence",
+  "answer": "Vollzeitbeschäftigte haben 30 Urlaubstage pro Kalenderjahr. Resturlaub aus dem Vorjahr muss bis zum 31. März genommen werden...",
+  "confidence": 0.87,
   "human_review": false,
-  "sources": [{ "title": "Finanzierung", "score": 0.312, "snippet": "..." }],
-  "token_usage": { "input_tokens": 920, "output_tokens": 180, "model": "claude-opus-4-7" }
-}
-```
-
-### Beispiel: RAG-Evaluation
-
-```bash
-curl -X POST http://localhost:8100/api/v1/eval/run \
-  -H "Content-Type: application/json" \
-  -d '{
-    "question": "Wie lange ist die Werkstatt samstags geöffnet?",
-    "answer": "Die Werkstatt ist samstags von 08:00 bis 13:00 Uhr geöffnet.",
-    "contexts": ["Öffnungszeiten Werkstatt: Samstag 08:00 – 13:00 Uhr"]
-  }'
-```
-
-```json
-{
-  "faithfulness": 1.0,
-  "relevancy": 1.0,
-  "overall": 1.0,
-  "explanation": "Alle Angaben vollständig durch den Kontext belegt.",
-  "llm_model": "claude-opus-4-7"
+  "hallucination_risk": 0.0,
+  "sources": [{"title": "Urlaub Und Abwesenheit", "score": 0.41}],
+  "redacted_input": "Wie viele Urlaubstage habe ich und was passiert mit Resturlaub?",
+  "trace": [{"agent": "IntentClassifierAgent", "decision": "leave_absence", "latency_ms": 0.04}]
 }
 ```
 
@@ -163,95 +136,103 @@ curl -X POST http://localhost:8100/api/v1/eval/run \
 ### Voraussetzungen
 
 - Python 3.11+
-- Anthropic API Key (optional — funktioniert auch ohne LLM mit Template-Fallback)
+- Anthropic API Key (optional — ohne Key läuft KLARA im Offline-Modus mit Template-Antworten)
 
 ### Installation
 
 ```bash
-git clone <repo>
-cd autohaus-ai-rag-agent-backend
+git clone https://github.com/ghostvenumai/klara-hr-rag.git
+cd klara-hr-rag
 
-python -m venv .venv
-source .venv/bin/activate
-pip install -e ".[dev]"
+make install        # Kern-Stack
+make install-ai     # inkl. Anthropic + OpenAI Clients
+
+cp .env.example .env   # Keys eintragen (optional)
+make run               # http://localhost:8000
 ```
 
-### Konfiguration
-
-`.env` im Projektstamm anlegen:
-
-```env
-ANTHROPIC_API_KEY=sk-ant-...
-LLM_MODEL=claude-opus-4-7
-LLM_MAX_TOKENS=1024
-HYBRID_SEARCH_ENABLED=true
-```
-
-### Starten
+### Docker
 
 ```bash
-uvicorn app.main:app --host 0.0.0.0 --port 8100
+docker compose up -d
 ```
 
-Web-Interface: `http://localhost:8100`  
-API-Dokumentation: `http://localhost:8100/docs`
-
-### Tests ausführen
+### Tests
 
 ```bash
-pytest tests/ -v
+make test   # 20 Tests: Intents, PII-Redaktion, Retrieval, Workflow, API
 ```
 
 ---
 
-## Wissensdatenbank befüllen
+## Wissensdatenbank
 
-Markdown-Dateien einfach in `data/knowledge_base/` ablegen — ARIA lädt sie beim Start automatisch.
+KLARA wird mit einer realistischen deutschen HR-Wissensdatenbank ausgeliefert
+(14 Dokumente in `data/knowledge_base/`):
 
-Alternativ per API mit optionalem **Contextual Retrieval** (Claude bereichert jeden Chunk mit Dokumentkontext vor dem Embedding):
+Urlaub & Abwesenheit · Krankmeldung · Arbeitszeit & Gleitzeit · Homeoffice ·
+Gehalt & Abrechnung · Spesen & Reisekosten · Onboarding · Offboarding ·
+Elternzeit & Mutterschutz · Benefits · Weiterbildung · Datenschutz ·
+Arbeitsvertrag · IT & Arbeitsmittel
 
-```bash
-curl -X POST http://localhost:8100/api/v1/ingest \
-  -H "Content-Type: application/json" \
-  -d '{
-    "contextual_enrichment": true,
-    "documents": [{
-      "title": "Garantiebedingungen 2025",
-      "content": "...",
-      "category": "warranty"
-    }]
-  }'
-```
+Eigene Dokumente: einfach als Markdown in `data/knowledge_base/` ablegen
+(automatischer Index beim Start) oder zur Laufzeit via `POST /api/v1/ingest`.
+
+---
+
+## Datenschutz & DSGVO
+
+- **PII-Redaktion vor Persistenz:** E-Mail, Telefon, IBAN, Kreditkarte und deutsche
+  Sozialversicherungsnummer werden erkannt und durch `[REDACTED_*]` ersetzt, bevor
+  die Eingabe das Audit-Log erreicht
+- **Eskalation:** DSGVO-Auskunftsersuchen und sensible Anfragen werden automatisch
+  als `human_review` markiert
+- **Kein Roh-Logging:** Das JSONL-Audit-Log enthält ausschließlich redigierte Eingaben
+- **On-Premise-fähig:** SQLite-freier Kern, lokale Embeddings als Fallback — keine
+  Datenübertragung an Dritte erforderlich
 
 ---
 
 ## Tech Stack
 
-| Schicht | Technologie |
+| Komponente | Technologie |
 |---|---|
-| **Framework** | FastAPI + Uvicorn (async, ASGI) |
-| **LLM** | Claude Opus 4.7 via Anthropic SDK (Prompt Caching, Streaming) |
-| **Retrieval** | Hybrid RRF (Lexikal + Dense), lokales Embedding |
-| **Datenschutz** | Eigener PII-Redactor (Regex-basiert) |
-| **Konfiguration** | Pydantic Settings v2 + `.env` |
-| **Tests** | pytest + pytest-asyncio |
-| **Logging** | JSONL Audit-Log, strukturiertes Python-Logging |
+| Backend | Python 3.11+ · FastAPI · Pydantic v2 (async) |
+| LLM | Claude Opus 4.8 (Synthese) · Claude Haiku 4.5 (Query Rewriting) — mit Prompt Caching |
+| Embeddings | OpenAI `text-embedding-3-small` · lokaler lexikalischer Fallback |
+| Vector Store | In-Memory-Index · optional Supabase (pgvector) |
+| Frontend | Vanilla JS Single-Page-Demo (kein Build-Schritt) |
+| Tests | pytest · pytest-asyncio (20 Tests) |
+| Deployment | Docker · docker-compose · Makefile |
 
 ---
 
 ## Architektur-Entscheidungen
 
-**Warum kein LangChain / LlamaIndex?**  
-Die gesamte Pipeline ist von Hand gebaut, um volle Kontrolle über Retrieval-Logik, Agent-Verhalten und Datenschutz-Schicht zu behalten. Das macht den Code einfacher zu prüfen, zu testen und produktionsreif zu deployen — ohne Framework-Abstraktion, die Fehler versteckt.
-
-**Warum RRF statt Score-Normalisierung?**  
-Reciprocal Rank Fusion ist provider-agnostisch, benötigt keine Score-Kalibrierung und übertrifft lineare Kombinationen konsistent auf Benchmark-Datensätzen (Cormack et al., 2009).
-
-**Warum offline Grounding-Verifikation?**  
-Ein zweiter LLM-Call für Halluzinationserkennung würde Latenz und Kosten verdoppeln. Token-Overlap auf Satz-Ebene ist schnell (< 1 ms), deterministisch und für produktive Autohaus-Anwendungen ausreichend präzise.
+1. **Halluzinationserkennung ohne LLM:** Token-Overlap je Satz statt LLM-Richter im
+   Hot Path — deterministisch, kostenlos, < 1 ms. Der LLM-Richter (RAGAS) läuft
+   bewusst nur offline im Evaluations-Endpoint.
+2. **Graceful Degradation:** Jede externe Abhängigkeit (Claude, OpenAI, Supabase) hat
+   einen lokalen Fallback. Das System bleibt ohne einen einzigen API-Key demonstrier-
+   und testbar.
+3. **PII-Redaktion als Pipeline-Schritt, nicht als Afterthought:** Der PrivacyGuard
+   läuft als zweiter Agent — vor Retrieval, vor Logging, vor allem anderen.
+4. **Trace-First-Design:** Jeder Agent gibt Entscheidung, Begründung und Latenz
+   zurück. Erklärbarkeit ist bei HR-Anwendungen keine Kür, sondern Voraussetzung
+   für Akzeptanz bei Betriebsrat und Datenschutzbeauftragten.
 
 ---
 
 ## Lizenz
 
-MIT License
+MIT — frei verwendbar als Referenzarchitektur.
+
+---
+
+<div align="center">
+
+Entwickelt von **Serkan · GhostVenumAI** — Freelance AI Engineering für den DACH-Markt
+
+[![GitHub](https://img.shields.io/badge/GitHub-GhostVenumAI-181717?style=flat-square&logo=github)](https://github.com/GhostVenumAI)
+
+</div>

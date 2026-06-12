@@ -12,12 +12,12 @@ from app.main import app
 def configured_paths(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> dict[str, Path]:
     knowledge_base_dir = tmp_path / "knowledge_base"
     knowledge_base_dir.mkdir()
-    (knowledge_base_dir / "financing.md").write_text(
-        "# Financing\n\nUsed SUV financing should stay within approved monthly rate bands and escalate binding approvals.",
+    (knowledge_base_dir / "spesen.md").write_text(
+        "# Spesen\n\nReisekosten und Spesen werden innerhalb von 30 Tagen über das Spesentool eingereicht und mit der nächsten Gehaltsabrechnung erstattet.",
         encoding="utf-8",
     )
-    (knowledge_base_dir / "service.md").write_text(
-        "# Service\n\nBrake warning light requests should be prioritized for same-day inspection whenever possible.",
+    (knowledge_base_dir / "urlaub.md").write_text(
+        "# Urlaub\n\nVollzeitbeschäftigte haben 30 Urlaubstage pro Jahr, Resturlaub muss bis zum 31. März des Folgejahres genommen werden.",
         encoding="utf-8",
     )
     audit_log_file = tmp_path / "audit.jsonl"

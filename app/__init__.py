@@ -1,2 +1,1 @@
-"""Application package for the Autohaus AI RAG backend."""
-
+"""Application package for the KLARA HR knowledge assistant backend."""

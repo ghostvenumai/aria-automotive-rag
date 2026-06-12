@@ -15,7 +15,7 @@
 - `app/security`: PII redaction and audit log persistence.
 - `app/workflow`: internal agent orchestration and runtime metrics.
 - `app/templates` and `app/static`: lightweight demo UI.
-- `data/knowledge_base`: dealership-oriented seed documents.
+- `data/knowledge_base`: German HR policy seed documents (vacation, payroll, working time, benefits).
 - `tests`: API, workflow, retrieval and privacy verification.
 
 ## Data Flow

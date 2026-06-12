@@ -18,7 +18,7 @@ class SecretRedactionFilter(logging.Filter):
 
 
 def configure_logging() -> logging.Logger:
-    logger = logging.getLogger("autohaus_ai")
+    logger = logging.getLogger("klara")
     if logger.handlers:
         return logger
 

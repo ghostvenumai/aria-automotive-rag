@@ -8,7 +8,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
-    app_name: str = "ARIA – Automotive Retrieval Intelligence Assistant"
+    app_name: str = "KLARA – Knowledge Lookup And Retrieval Assistant"
     app_env: str = "development"
     app_host: str = "0.0.0.0"
     app_port: int = 8000
@@ -25,9 +25,9 @@ class Settings(BaseSettings):
     openai_api_key: str | None = None
     openai_embedding_model: str = "text-embedding-3-small"
     anthropic_api_key: str | None = None
-    llm_model: str = "claude-opus-4-7"
+    llm_model: str = "claude-opus-4-8"
     llm_max_tokens: int = Field(default=1024, ge=256, le=4096)
-    llm_rewriter_model: str = "claude-haiku-4-5-20251001"
+    llm_rewriter_model: str = "claude-haiku-4-5"
     hybrid_search_enabled: bool = True
     session_history_turns: int = Field(default=3, ge=0, le=10)
 

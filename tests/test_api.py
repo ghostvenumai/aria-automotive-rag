@@ -12,7 +12,7 @@ def test_health_and_root_page(client: TestClient) -> None:
 
     index_response = client.get("/")
     assert index_response.status_code == 200
-    assert "Autohaus AI RAG Agent Backend" in index_response.text
+    assert "KLARA" in index_response.text
 
 
 def test_ask_metrics_and_audit_log_endpoints(
@@ -21,11 +21,11 @@ def test_ask_metrics_and_audit_log_endpoints(
 ) -> None:
     ask_response = client.post(
         "/api/v1/ask",
-        json={"question": "Can you explain financing for a used SUV with low monthly payments?"},
+        json={"question": "Wie reiche ich Reisekosten und Spesen zur Erstattung ein?"},
     )
     assert ask_response.status_code == 200
     ask_payload = ask_response.json()
-    assert ask_payload["intent"] == "financing"
+    assert ask_payload["intent"] == "payroll_compensation"
     assert ask_payload["sources"]
 
     metrics_response = client.get("/api/v1/metrics")
@@ -46,10 +46,10 @@ def test_ingest_endpoint_updates_index(client: TestClient) -> None:
         json={
             "documents": [
                 {
-                    "title": "Warranty Guide",
-                    "content": "Battery warranty claims for certified EV inventory need supervisor approval after a seven year threshold.",
-                    "category": "warranty",
-                    "tags": ["ev", "warranty"],
+                    "title": "JobRad Leitfaden",
+                    "content": "JobRad Leasing läuft über Entgeltumwandlung, pro Person können bis zu zwei Fahrräder geleast werden.",
+                    "category": "benefits",
+                    "tags": ["jobrad", "benefits"],
                 }
             ]
         },
@@ -61,7 +61,7 @@ def test_ingest_endpoint_updates_index(client: TestClient) -> None:
 
     ask_response = client.post(
         "/api/v1/ask",
-        json={"question": "How do battery warranty claims work for certified EV inventory?"},
+        json={"question": "Wie funktioniert das JobRad Leasing über Entgeltumwandlung?"},
     )
     assert ask_response.status_code == 200
     assert ask_response.json()["sources"]

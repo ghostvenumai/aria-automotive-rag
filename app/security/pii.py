@@ -14,7 +14,8 @@ class RedactionResult:
 class PIIRedactor:
     PATTERNS: tuple[tuple[str, re.Pattern[str]], ...] = (
         ("email", re.compile(r"\b[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}\b", re.IGNORECASE)),
-        ("vin", re.compile(r"\b[A-HJ-NPR-Z0-9]{17}\b")),
+        # Deutsche Sozialversicherungsnummer: 12 190878 M 512 (mit/ohne Leerzeichen)
+        ("svnr", re.compile(r"\b\d{2}\s?\d{6}\s?[A-Z]\s?\d{3}\b")),
         ("iban", re.compile(r"\b[A-Z]{2}\d{2}[A-Z0-9]{11,30}\b")),
         ("credit_card", re.compile(r"\b(?:\d[ -]*?){13,16}\b")),
         (

@@ -29,12 +29,12 @@ def _trace_step(
 
 class IntentClassifierAgent:
     INTENT_RULES: tuple[tuple[str, tuple[str, ...]], ...] = (
-        ("privacy_request", ("privacy", "dsgvo", "gdpr", "daten löschen", "daten entfernen", "delete my data", "remove my data", "kontaktdaten")),
-        ("vehicle_inventory", ("bestand", "verfügbar", "suv", "limousine", "lager", "fahrzeug", "auto", "modell", "inventory", "available", "stock", "vehicle", "car", "model")),
-        ("financing", ("finanzierung", "finanzieren", "leasing", "rate", "monatlich", "kredit", "anzahlung", "laufzeit", "finance", "financing", "lease", "monthly", "installment", "loan")),
-        ("service_booking", ("service", "werkstatt", "wartung", "inspektion", "reparatur", "termin", "ölwechsel", "maintenance", "inspection", "repair", "appointment", "oil change")),
-        ("trade_in", ("inzahlungnahme", "eintausch", "bewertung", "verkaufen", "trade-in", "trade in", "valuation", "resale", "sell my car")),
-        ("warranty", ("garantie", "gewährleistung", "deckung", "warranty", "coverage", "guarantee", "extended warranty")),
+        ("privacy_request", ("privacy", "dsgvo", "gdpr", "daten löschen", "daten entfernen", "delete my data", "remove my data", "auskunftsersuchen", "personalakte einsehen")),
+        ("leave_absence", ("urlaub", "urlaubstage", "resturlaub", "sonderurlaub", "abwesenheit", "krank", "krankmeldung", "au-bescheinigung", "vacation", "leave", "sick", "absence", "pto")),
+        ("payroll_compensation", ("gehalt", "lohn", "gehaltsabrechnung", "vergütung", "spesen", "reisekosten", "bonus", "auszahlung", "payroll", "salary", "compensation", "expenses", "reimbursement")),
+        ("onboarding_offboarding", ("onboarding", "offboarding", "erster arbeitstag", "einarbeitung", "probezeit", "austritt", "kündigung", "zeugnis", "first day", "notice period", "resignation")),
+        ("working_time", ("arbeitszeit", "gleitzeit", "überstunden", "homeoffice", "home office", "remote", "teilzeit", "kernarbeitszeit", "zeiterfassung", "working hours", "overtime", "part-time", "flextime")),
+        ("benefits", ("benefits", "zusatzleistung", "jobrad", "jobticket", "betriebliche altersvorsorge", "bav", "zuschuss", "weiterbildung", "fortbildung", "essenszuschuss", "perks", "pension", "training budget")),
     )
 
     def classify(self, state: AskWorkflowState) -> dict[str, object]:
@@ -50,7 +50,7 @@ class IntentClassifierAgent:
         return _trace_step(
             "IntentClassifierAgent",
             best_intent,
-            "Domänen-Keywords mit Autohaus-Intents abgeglichen.",
+            "Domänen-Keywords mit HR-Intents abgeglichen.",
             started_at,
             keyword_hits=best_score,
         )
@@ -211,15 +211,15 @@ class ResponseComposerAgent:
         if not sources:
             return (
                 "Zu Ihrer Anfrage konnten keine relevanten Informationen in der "
-                "Wissensdatenbank gefunden werden. Bitte wenden Sie sich an einen "
-                "unserer Verkaufs- oder Servicemitarbeiter für eine verbindliche Auskunft."
+                "Wissensdatenbank gefunden werden. Bitte wenden Sie sich an das "
+                "HR-Team für eine verbindliche Auskunft."
             )
         lead = {
-            "vehicle_inventory": "Aus dem aktuellen Fahrzeugbestand ergibt sich Folgendes:",
-            "financing": "Die Finanzierungsoptionen in unserer Wissensdatenbank umfassen Folgendes:",
-            "service_booking": "Laut unserem Serviceleitfaden empfehlen wir Folgendes:",
-            "trade_in": "Zu Ihrer Inzahlungnahme-Anfrage haben wir folgende Informationen:",
-            "warranty": "Die Garantiebedingungen besagen Folgendes:",
+            "leave_absence": "Die Urlaubs- und Abwesenheitsregelungen besagen Folgendes:",
+            "payroll_compensation": "Zu Gehalt und Vergütung haben wir folgende Informationen:",
+            "onboarding_offboarding": "Laut unserem On-/Offboarding-Leitfaden gilt Folgendes:",
+            "working_time": "Die Arbeitszeitregelungen besagen Folgendes:",
+            "benefits": "Zu den angebotenen Zusatzleistungen ergibt sich Folgendes:",
             "general": "Aus unserer Wissensdatenbank ergibt sich Folgendes:",
         }.get(intent, "Aus unserer Wissensdatenbank ergibt sich Folgendes:")
         snippets = " ".join(source.snippet for source in sources[:2])

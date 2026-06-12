@@ -80,10 +80,10 @@ async def lifespan(app: FastAPI):
 
 def create_app() -> FastAPI:
     app = FastAPI(
-        title="Autohaus AI RAG Agent Backend",
-        version="0.2.0",
+        title="KLARA – HR Knowledge Assistant API",
+        version="1.0.0",
         description=(
-            "Privacy-aware RAG backend for automotive dealership AI workflows. "
+            "Privacy-aware RAG backend for HR and people-operations knowledge workflows. "
             "Features hybrid RRF retrieval, Claude-powered synthesis, "
             "multi-turn conversation history, streaming SSE, and full agent tracing."
         ),

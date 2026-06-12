@@ -1,7 +1,7 @@
 version: "3.9"
 
 services:
-  autohaus-ai-rag-agent-backend:
+  klara-hr-rag:
     build: .
     ports:
       - "8000:8000"

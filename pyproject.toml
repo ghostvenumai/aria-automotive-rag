@@ -3,9 +3,9 @@ requires = ["setuptools>=68", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "autohaus-ai-rag-agent-backend"
+name = "klara-hr-rag"
 version = "0.2.0"
-description = "Privacy-aware FastAPI RAG backend for automotive dealership AI workflows — hybrid RRF retrieval, Claude synthesis, streaming SSE, multi-turn history."
+description = "KLARA — privacy-aware FastAPI RAG backend for HR knowledge workflows: hybrid RRF retrieval, Claude synthesis, hallucination detection, streaming SSE, multi-turn history."
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
